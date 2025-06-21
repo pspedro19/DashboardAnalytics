@@ -74,6 +74,10 @@ logs/
 !data/raw/**/*.csv
 !data/raw/**/*.xlsx
 
+# Keep documentation files
+!docs/*.csv
+!docs/*.md
+
 # Power BI temporary files
 *.pbix.tmp
 *.pbix.bak

@@ -1,0 +1,128 @@
+Table,Column,Data_Type,Description,Primary_Key,Foreign_Key,Nullable,Default_Value,Validation_Rules,Business_Rules
+Date_Dimension,date_key,INTEGER,Unique identifier for date records,TRUE,FALSE,FALSE,,,Surrogate key for date dimension
+Date_Dimension,date,DATE,Full date value,FALSE,FALSE,FALSE,,,Standard date format YYYY-MM-DD
+Date_Dimension,day_of_week,INTEGER,Day of week (1=Monday, 7=Sunday),FALSE,FALSE,FALSE,,1-7,ISO standard day numbering
+Date_Dimension,day_of_month,INTEGER,Day of month (1-31),FALSE,FALSE,FALSE,,1-31,Calendar day
+Date_Dimension,month,INTEGER,Month number (1-12),FALSE,FALSE,FALSE,,1-12,Calendar month
+Date_Dimension,quarter,INTEGER,Quarter number (1-4),FALSE,FALSE,FALSE,,1-4,Calendar quarter
+Date_Dimension,year,INTEGER,Year value,FALSE,FALSE,FALSE,,,Four digit year
+Date_Dimension,fiscal_year,INTEGER,Fiscal year value,FALSE,FALSE,FALSE,,,Fiscal year calculation
+Date_Dimension,is_weekend,BOOLEAN,Weekend flag,FALSE,FALSE,FALSE,FALSE,TRUE/FALSE,Weekend indicator
+Date_Dimension,is_holiday,BOOLEAN,Holiday flag,FALSE,FALSE,FALSE,FALSE,TRUE/FALSE,Holiday indicator
+Site_Dimension,site_key,INTEGER,Unique identifier for site records,TRUE,FALSE,FALSE,,,Surrogate key for site dimension
+Site_Dimension,site_id,VARCHAR(50),Business identifier for site,FALSE,FALSE,FALSE,,,Unique business key
+Site_Dimension,site_name,VARCHAR(100),Site display name,FALSE,FALSE,FALSE,,,Human readable site name
+Site_Dimension,site_category,VARCHAR(50),Site category classification,FALSE,FALSE,TRUE,,,Site categorization
+Site_Dimension,site_quality_score,DECIMAL(3,2),Site quality rating,FALSE,FALSE,TRUE,,0.00-10.00,Quality score range
+Site_Dimension,is_active,BOOLEAN,Active site flag,FALSE,FALSE,FALSE,TRUE,TRUE/FALSE,Active status
+Site_Dimension,effective_date,DATE,Record effective start date,FALSE,FALSE,FALSE,,,SCD Type 2 effective date
+Site_Dimension,expiration_date,DATE,Record expiration date,FALSE,FALSE,TRUE,,,SCD Type 2 expiration date
+Site_Dimension,current_flag,CHAR(1),Current record indicator,FALSE,FALSE,FALSE,Y,Y/N,Current record flag
+Creative_Dimension,creative_key,INTEGER,Unique identifier for creative records,TRUE,FALSE,FALSE,,,Surrogate key for creative dimension
+Creative_Dimension,creative_id,VARCHAR(50),Business identifier for creative,FALSE,FALSE,FALSE,,,Unique business key
+Creative_Dimension,creative_name,VARCHAR(100),Creative display name,FALSE,FALSE,FALSE,,,Human readable creative name
+Creative_Dimension,creative_type,VARCHAR(50),Creative type classification,FALSE,FALSE,TRUE,,,Creative type categorization
+Creative_Dimension,creative_size,VARCHAR(20),Creative size specification,FALSE,FALSE,TRUE,,,Standard ad sizes
+Creative_Dimension,creative_format,VARCHAR(30),Creative format type,FALSE,FALSE,TRUE,,,Format classification
+Creative_Dimension,creative_version,VARCHAR(10),Creative version number,FALSE,FALSE,TRUE,,,Version tracking
+Creative_Dimension,effective_date,DATE,Record effective start date,FALSE,FALSE,FALSE,,,SCD Type 2 effective date
+Creative_Dimension,expiration_date,DATE,Record expiration date,FALSE,FALSE,TRUE,,,SCD Type 2 expiration date
+Creative_Dimension,current_flag,CHAR(1),Current record indicator,FALSE,FALSE,FALSE,Y,Y/N,Current record flag
+Device_Dimension,device_key,INTEGER,Unique identifier for device records,TRUE,FALSE,FALSE,,,Surrogate key for device dimension
+Device_Dimension,device_type,VARCHAR(30),Device type classification,FALSE,FALSE,FALSE,,,Device categorization
+Device_Dimension,device_category,VARCHAR(20),Device category,FALSE,FALSE,TRUE,,,Category classification
+Device_Dimension,operating_system,VARCHAR(30),Operating system name,FALSE,FALSE,TRUE,,,OS identification
+Device_Dimension,browser,VARCHAR(30),Browser name,FALSE,FALSE,TRUE,,,Browser identification
+Device_Dimension,screen_resolution,VARCHAR(20),Screen resolution,FALSE,FALSE,TRUE,,,Resolution specification
+Device_Dimension,is_mobile,BOOLEAN,Mobile device flag,FALSE,FALSE,FALSE,FALSE,TRUE/FALSE,Mobile indicator
+Geographic_Dimension,geo_key,INTEGER,Unique identifier for geographic records,TRUE,FALSE,FALSE,,,Surrogate key for geographic dimension
+Geographic_Dimension,country,VARCHAR(50),Country name,FALSE,FALSE,FALSE,,,Country identification
+Geographic_Dimension,region,VARCHAR(50),Region or state name,FALSE,FALSE,TRUE,,,Regional classification
+Geographic_Dimension,city,VARCHAR(50),City name,FALSE,FALSE,TRUE,,,City identification
+Geographic_Dimension,postal_code,VARCHAR(20),Postal code,FALSE,FALSE,TRUE,,,Postal code format
+Geographic_Dimension,timezone,VARCHAR(30),Timezone identifier,FALSE,FALSE,TRUE,,,Timezone specification
+Geographic_Dimension,latitude,DECIMAL(10,8),Latitude coordinate,FALSE,FALSE,TRUE,,-90.00000000-90.00000000,Latitude range
+Geographic_Dimension,longitude,DECIMAL(11,8),Longitude coordinate,FALSE,FALSE,TRUE,,-180.00000000-180.00000000,Longitude range
+Campaign_Dimension,campaign_key,INTEGER,Unique identifier for campaign records,TRUE,FALSE,FALSE,,,Surrogate key for campaign dimension
+Campaign_Dimension,campaign_id,VARCHAR(50),Business identifier for campaign,FALSE,FALSE,FALSE,,,Unique business key
+Campaign_Dimension,campaign_name,VARCHAR(100),Campaign display name,FALSE,FALSE,FALSE,,,Human readable campaign name
+Campaign_Dimension,campaign_type,VARCHAR(50),Campaign type classification,FALSE,FALSE,TRUE,,,Campaign type categorization
+Campaign_Dimension,campaign_category,VARCHAR(50),Campaign category,FALSE,FALSE,TRUE,,,Category classification
+Campaign_Dimension,start_date,DATE,Campaign start date,FALSE,FALSE,TRUE,,,Campaign start date
+Campaign_Dimension,end_date,DATE,Campaign end date,FALSE,FALSE,TRUE,,,Campaign end date
+Campaign_Dimension,budget,DECIMAL(15,2),Campaign budget amount,FALSE,FALSE,TRUE,,0.00+,Budget amount
+Campaign_Dimension,effective_date,DATE,Record effective start date,FALSE,FALSE,FALSE,,,SCD Type 2 effective date
+Campaign_Dimension,expiration_date,DATE,Record expiration date,FALSE,FALSE,TRUE,,,SCD Type 2 expiration date
+Campaign_Dimension,current_flag,CHAR(1),Current record indicator,FALSE,FALSE,FALSE,Y,Y/N,Current record flag
+User_Dimension,user_key,INTEGER,Unique identifier for user records,TRUE,FALSE,FALSE,,,Surrogate key for user dimension
+User_Dimension,user_id,VARCHAR(50),Business identifier for user,FALSE,FALSE,FALSE,,,Unique business key
+User_Dimension,user_type,VARCHAR(30),User type classification,FALSE,FALSE,TRUE,,,User type categorization
+User_Dimension,user_segment,VARCHAR(50),User segment classification,FALSE,FALSE,TRUE,,,Segment classification
+User_Dimension,registration_date,DATE,User registration date,FALSE,FALSE,TRUE,,,Registration date
+User_Dimension,last_activity_date,DATE,Last user activity date,FALSE,FALSE,TRUE,,,Last activity tracking
+User_Dimension,total_sessions,INTEGER,Total user sessions,FALSE,FALSE,TRUE,0,0+,Session count
+User_Dimension,engagement_score,DECIMAL(3,2),User engagement score,FALSE,FALSE,TRUE,,0.00-10.00,Engagement rating
+Channel_Dimension,channel_key,INTEGER,Unique identifier for channel records,TRUE,FALSE,FALSE,,,Surrogate key for channel dimension
+Channel_Dimension,channel_name,VARCHAR(50),Channel display name,FALSE,FALSE,FALSE,,,Human readable channel name
+Channel_Dimension,channel_type,VARCHAR(30),Channel type classification,FALSE,FALSE,TRUE,,,Channel type categorization
+Channel_Dimension,channel_category,VARCHAR(50),Channel category,FALSE,FALSE,TRUE,,,Category classification
+Channel_Dimension,is_paid,BOOLEAN,Paid channel flag,FALSE,FALSE,FALSE,FALSE,TRUE/FALSE,Paid channel indicator
+Channel_Dimension,is_organic,BOOLEAN,Organic channel flag,FALSE,FALSE,FALSE,TRUE,TRUE/FALSE,Organic channel indicator
+Product_Dimension,product_key,INTEGER,Unique identifier for product records,TRUE,FALSE,FALSE,,,Surrogate key for product dimension
+Product_Dimension,product_id,VARCHAR(50),Business identifier for product,FALSE,FALSE,FALSE,,,Unique business key
+Product_Dimension,product_name,VARCHAR(100),Product display name,FALSE,FALSE,FALSE,,,Human readable product name
+Product_Dimension,product_category,VARCHAR(50),Product category,FALSE,FALSE,TRUE,,,Category classification
+Product_Dimension,product_subcategory,VARCHAR(50),Product subcategory,FALSE,FALSE,TRUE,,,Subcategory classification
+Product_Dimension,brand,VARCHAR(50),Product brand,FALSE,FALSE,TRUE,,,Brand identification
+Product_Dimension,price,DECIMAL(10,2),Product price,FALSE,FALSE,TRUE,,0.00+,Price amount
+Product_Dimension,is_active,BOOLEAN,Active product flag,FALSE,FALSE,FALSE,TRUE,TRUE/FALSE,Active status
+Advertising_Facts,fact_key,INTEGER,Unique identifier for advertising fact records,TRUE,FALSE,FALSE,,,Surrogate key for fact table
+Advertising_Facts,date_key,INTEGER,Date dimension foreign key,FALSE,TRUE,FALSE,,,Date dimension reference
+Advertising_Facts,site_key,INTEGER,Site dimension foreign key,FALSE,TRUE,FALSE,,,Site dimension reference
+Advertising_Facts,creative_key,INTEGER,Creative dimension foreign key,FALSE,TRUE,FALSE,,,Creative dimension reference
+Advertising_Facts,device_key,INTEGER,Device dimension foreign key,FALSE,TRUE,FALSE,,,Device dimension reference
+Advertising_Facts,geo_key,INTEGER,Geographic dimension foreign key,FALSE,TRUE,FALSE,,,Geographic dimension reference
+Advertising_Facts,campaign_key,INTEGER,Campaign dimension foreign key,FALSE,TRUE,FALSE,,,Campaign dimension reference
+Advertising_Facts,channel_key,INTEGER,Channel dimension foreign key,FALSE,TRUE,FALSE,,,Channel dimension reference
+Advertising_Facts,impressions,INTEGER,Number of impressions,FALSE,FALSE,FALSE,0,0+,Impression count
+Advertising_Facts,clicks,INTEGER,Number of clicks,FALSE,FALSE,FALSE,0,0+,Click count
+Advertising_Facts,ctr,DECIMAL(5,4),Click-through rate,FALSE,FALSE,FALSE,0.0000,0.0000-1.0000,CTR calculation
+Advertising_Facts,spend,DECIMAL(15,2),Advertising spend amount,FALSE,FALSE,FALSE,0.00,0.00+,Spend amount
+Advertising_Facts,cpc,DECIMAL(10,4),Cost per click,FALSE,FALSE,FALSE,0.0000,0.0000+,CPC calculation
+Advertising_Facts,cpm,DECIMAL(10,4),Cost per mille,FALSE,FALSE,FALSE,0.0000,0.0000+,CPM calculation
+Advertising_Facts,conversions,INTEGER,Number of conversions,FALSE,FALSE,FALSE,0,0+,Conversion count
+Advertising_Facts,conversion_rate,DECIMAL(5,4),Conversion rate,FALSE,FALSE,FALSE,0.0000,0.0000-1.0000,Conversion rate calculation
+Advertising_Facts,revenue,DECIMAL(15,2),Revenue amount,FALSE,FALSE,FALSE,0.00,0.00+,Revenue amount
+Advertising_Facts,roas,DECIMAL(10,4),Return on ad spend,FALSE,FALSE,FALSE,0.0000,0.0000+,ROAS calculation
+Web_Analytics_Facts,fact_key,INTEGER,Unique identifier for web analytics fact records,TRUE,FALSE,FALSE,,,Surrogate key for fact table
+Web_Analytics_Facts,date_key,INTEGER,Date dimension foreign key,FALSE,TRUE,FALSE,,,Date dimension reference
+Web_Analytics_Facts,device_key,INTEGER,Device dimension foreign key,FALSE,TRUE,FALSE,,,Device dimension reference
+Web_Analytics_Facts,geo_key,INTEGER,Geographic dimension foreign key,FALSE,TRUE,FALSE,,,Geographic dimension reference
+Web_Analytics_Facts,user_key,INTEGER,User dimension foreign key,FALSE,TRUE,FALSE,,,User dimension reference
+Web_Analytics_Facts,channel_key,INTEGER,Channel dimension foreign key,FALSE,TRUE,FALSE,,,Channel dimension reference
+Web_Analytics_Facts,product_key,INTEGER,Product dimension foreign key,FALSE,TRUE,FALSE,,,Product dimension reference
+Web_Analytics_Facts,sessions,INTEGER,Number of sessions,FALSE,FALSE,FALSE,0,0+,Session count
+Web_Analytics_Facts,users,INTEGER,Number of users,FALSE,FALSE,FALSE,0,0+,User count
+Web_Analytics_Facts,pageviews,INTEGER,Number of pageviews,FALSE,FALSE,FALSE,0,0+,Pageview count
+Web_Analytics_Facts,bounce_rate,DECIMAL(5,4),Bounce rate percentage,FALSE,FALSE,FALSE,0.0000,0.0000-1.0000,Bounce rate calculation
+Web_Analytics_Facts,session_duration,INTEGER,Average session duration in seconds,FALSE,FALSE,FALSE,0,0+,Duration in seconds
+Web_Analytics_Facts,pages_per_session,DECIMAL(5,2),Average pages per session,FALSE,FALSE,FALSE,0.00,0.00+,Pages per session calculation
+Web_Analytics_Facts,goal_completions,INTEGER,Number of goal completions,FALSE,FALSE,FALSE,0,0+,Goal completion count
+Web_Analytics_Facts,ecommerce_revenue,DECIMAL(15,2),E-commerce revenue amount,FALSE,FALSE,FALSE,0.00,0.00+,E-commerce revenue
+Site_Creative_Bridge,bridge_key,INTEGER,Unique identifier for bridge records,TRUE,FALSE,FALSE,,,Surrogate key for bridge table
+Site_Creative_Bridge,site_key,INTEGER,Site dimension foreign key,FALSE,TRUE,FALSE,,,Site dimension reference
+Site_Creative_Bridge,creative_key,INTEGER,Creative dimension foreign key,FALSE,TRUE,FALSE,,,Creative dimension reference
+Site_Creative_Bridge,relationship_type,VARCHAR(30),Type of relationship,FALSE,FALSE,TRUE,,,Relationship classification
+Site_Creative_Bridge,effective_date,DATE,Relationship effective start date,FALSE,FALSE,FALSE,,,Effective date
+Site_Creative_Bridge,expiration_date,DATE,Relationship expiration date,FALSE,FALSE,TRUE,,,Expiration date
+Campaign_Site_Bridge,bridge_key,INTEGER,Unique identifier for bridge records,TRUE,FALSE,FALSE,,,Surrogate key for bridge table
+Campaign_Site_Bridge,campaign_key,INTEGER,Campaign dimension foreign key,FALSE,TRUE,FALSE,,,Campaign dimension reference
+Campaign_Site_Bridge,site_key,INTEGER,Site dimension foreign key,FALSE,TRUE,FALSE,,,Site dimension reference
+Campaign_Site_Bridge,allocation_percentage,DECIMAL(5,2),Budget allocation percentage,FALSE,FALSE,TRUE,,0.00-100.00,Allocation percentage
+Campaign_Site_Bridge,priority,INTEGER,Priority ranking,FALSE,FALSE,TRUE,,1-10,Priority ranking
+User_Session_Bridge,bridge_key,INTEGER,Unique identifier for bridge records,TRUE,FALSE,FALSE,,,Surrogate key for bridge table
+User_Session_Bridge,user_key,INTEGER,User dimension foreign key,FALSE,TRUE,FALSE,,,User dimension reference
+User_Session_Bridge,session_id,VARCHAR(50),Session identifier,FALSE,FALSE,FALSE,,,Session identification
+User_Session_Bridge,session_start_time,TIMESTAMP,Session start timestamp,FALSE,FALSE,FALSE,,,Start time
+User_Session_Bridge,session_end_time,TIMESTAMP,Session end timestamp,FALSE,FALSE,TRUE,,,End time
+User_Session_Bridge,touchpoints,INTEGER,Number of touchpoints,FALSE,FALSE,FALSE,0,0+,Touchpoint count 
