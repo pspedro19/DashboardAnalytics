@@ -1,13 +1,27 @@
 import pandas as pd
 import numpy as np
-from utils import *
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.utils import *
 
 logger = setup_logging()
 
+def get_project_root():
+    """Get the project root directory"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
+
 def calculate_summary_kpis():
     logger.info("Calculando KPIs resumen...")
-    fact_ad = pd.read_csv('../03_dimensional_model/facts/fact_ad_performance.csv')
-    fact_web = pd.read_csv('../03_dimensional_model/facts/fact_web_analytics.csv')
+    project_root = get_project_root()
+    
+    fact_ad_file = os.path.join(project_root, 'data', 'dimensional', 'facts', 'fact_ad_performance.csv')
+    fact_web_file = os.path.join(project_root, 'data', 'dimensional', 'facts', 'fact_web_analytics.csv')
+    
+    fact_ad = pd.read_csv(fact_ad_file)
+    fact_web = pd.read_csv(fact_web_file)
+    
     total_impressions = fact_ad['impressions'].sum()
     total_clicks = fact_ad['clicks'].sum()
     ctr = (total_clicks / total_impressions * 100) if total_impressions > 0 else 0
@@ -54,13 +68,23 @@ def calculate_summary_kpis():
         'value': f"{click_to_session_rate:.1f}%",
         'category': 'Conversion'
     }])
-    save_csv(summary_kpis, '../05_kpi_outputs/kpi_summary.csv')
+    
+    outputs_dir = os.path.join(project_root, 'data', 'outputs')
+    os.makedirs(outputs_dir, exist_ok=True)
+    
+    save_csv(summary_kpis, os.path.join(outputs_dir, 'kpi_summary.csv'))
     return summary_kpis
 
 def calculate_kpis_by_site():
     logger.info("Calculando KPIs por sitio...")
-    fact_ad = pd.read_csv('../03_dimensional_model/facts/fact_ad_performance.csv')
-    dim_site = pd.read_csv('../03_dimensional_model/dimensions/dim_site.csv')
+    project_root = get_project_root()
+    
+    fact_ad_file = os.path.join(project_root, 'data', 'dimensional', 'facts', 'fact_ad_performance.csv')
+    site_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_site.csv')
+    
+    fact_ad = pd.read_csv(fact_ad_file)
+    dim_site = pd.read_csv(site_file)
+    
     df = fact_ad.merge(dim_site, on='site_key')
     kpis_by_site = df.groupby(['site_name', 'site_category']).agg({
         'impressions': 'sum',
@@ -69,19 +93,31 @@ def calculate_kpis_by_site():
     kpis_by_site['ctr'] = (kpis_by_site['clicks'] / kpis_by_site['impressions'] * 100)
     kpis_by_site['ctr'] = kpis_by_site['ctr'].round(2)
     kpis_by_site = kpis_by_site.sort_values('impressions', ascending=False)
-    save_csv(kpis_by_site, '../05_kpi_outputs/kpi_by_site.csv')
+    
+    outputs_dir = os.path.join(project_root, 'data', 'outputs')
+    os.makedirs(outputs_dir, exist_ok=True)
+    
+    save_csv(kpis_by_site, os.path.join(outputs_dir, 'kpi_by_site.csv'))
     return kpis_by_site
 
 def calculate_kpis_by_creative():
     logger.info("Calculando KPIs por creativo...")
-    fact_ad = pd.read_csv('../03_dimensional_model/facts/fact_ad_performance.csv')
-    fact_web = pd.read_csv('../03_dimensional_model/facts/fact_web_analytics.csv')
-    dim_creative = pd.read_csv('../03_dimensional_model/dimensions/dim_creative.csv')
-    dim_ad_content = pd.read_csv('../03_dimensional_model/dimensions/dim_ad_content.csv')
+    project_root = get_project_root()
+    
+    fact_ad_file = os.path.join(project_root, 'data', 'dimensional', 'facts', 'fact_ad_performance.csv')
+    fact_web_file = os.path.join(project_root, 'data', 'dimensional', 'facts', 'fact_web_analytics.csv')
+    creative_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_creative.csv')
+    ad_content_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_ad_content.csv')
+    
+    fact_ad = pd.read_csv(fact_ad_file)
+    fact_web = pd.read_csv(fact_web_file)
+    dim_creative = pd.read_csv(creative_file)
+    dim_ad_content = pd.read_csv(ad_content_file)
     
     # Check if bridge table exists and has data
+    bridge_file = os.path.join(project_root, 'data', 'dimensional', 'bridge', 'bridge_creative_adcontent.csv')
     try:
-        bridge = pd.read_csv('../03_dimensional_model/bridge/bridge_creative_adcontent.csv')
+        bridge = pd.read_csv(bridge_file)
         if len(bridge) == 0:
             logger.warning("Bridge table is empty, creating simplified creative KPIs without web analytics data")
             bridge = None
@@ -119,13 +155,22 @@ def calculate_kpis_by_creative():
         final_cols = ['creative_name', 'impressions', 'clicks', 'ctr']
         creative_complete = ad_kpis[final_cols].round(2)
     
-    save_csv(creative_complete, '../05_kpi_outputs/kpi_by_creative.csv')
+    outputs_dir = os.path.join(project_root, 'data', 'outputs')
+    os.makedirs(outputs_dir, exist_ok=True)
+    
+    save_csv(creative_complete, os.path.join(outputs_dir, 'kpi_by_creative.csv'))
     return creative_complete
 
 def calculate_kpis_by_device():
     logger.info("Calculando KPIs por dispositivo...")
-    fact_web = pd.read_csv('../03_dimensional_model/facts/fact_web_analytics.csv')
-    dim_device = pd.read_csv('../03_dimensional_model/dimensions/dim_device.csv')
+    project_root = get_project_root()
+    
+    fact_web_file = os.path.join(project_root, 'data', 'dimensional', 'facts', 'fact_web_analytics.csv')
+    device_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_device.csv')
+    
+    fact_web = pd.read_csv(fact_web_file)
+    dim_device = pd.read_csv(device_file)
+    
     df = fact_web.merge(dim_device, on='device_key')
     kpis_by_device = df.groupby('device_category').agg({
         'users': 'sum',
@@ -139,7 +184,11 @@ def calculate_kpis_by_device():
     ).round(2)
     kpis_by_device['avg_session_duration_sec'] = kpis_by_device['avg_session_duration_sec'].round(0)
     kpis_by_device['bounce_rate'] = (kpis_by_device['bounce_rate'] * 100).round(1)
-    save_csv(kpis_by_device, '../05_kpi_outputs/kpi_by_device.csv')
+    
+    outputs_dir = os.path.join(project_root, 'data', 'outputs')
+    os.makedirs(outputs_dir, exist_ok=True)
+    
+    save_csv(kpis_by_device, os.path.join(outputs_dir, 'kpi_by_device.csv'))
     return kpis_by_device
 
 if __name__ == "__main__":

@@ -6,14 +6,17 @@ import sys
 import os
 import time
 from datetime import datetime
-from utils import setup_logging
+
+# Add current directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import extract_and_clean
-import validate_data
-import create_dimensions
-import create_facts
-import calculate_kpis
-import generate_analysis_report
+
+from utils.utils import setup_logging
+import extract.extract_and_clean as extract_and_clean
+import utils.validate_data as validate_data
+import transform.create_dimensions as create_dimensions
+import transform.create_facts as create_facts
+import load.calculate_kpis as calculate_kpis
+import load.generate_analysis_report as generate_analysis_report
 
 def main():
     start_time = time.time()
@@ -51,7 +54,7 @@ def main():
         logger.info("ETL COMPLETADO EXITOSAMENTE")
         logger.info(f"Tiempo total: {elapsed_time:.2f} segundos")
         logger.info("=" * 50)
-        print("\n📁 ARCHIVOS GENERADOS:")
+        print("\nARCHIVOS GENERADOS:")
         print("├── 02_staging/           # Datos limpios")
         print("├── 03_dimensional_model/ # Modelo Kimball")
         print("│   ├── dimensions/       # 9 dimensiones")
@@ -65,7 +68,7 @@ def main():
         print("│   ├── analysis_report.txt # Reporte completo")
         print("│   └── executive_summary.csv # Resumen ejecutivo")
         print("└── 06_logs/            # Logs de ejecución")
-        print("\n🎯 LISTO PARA POWER BI:")
+        print("\nLISTO PARA POWER BI:")
         print("• Conecta las tablas de facts/ y dimensions/")
         print("• Usa los KPIs de 05_kpi_outputs/ para métricas")
         print("• Consulta analysis_report.txt para insights")

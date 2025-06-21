@@ -3,7 +3,7 @@
 ## Overview
 This document provides detailed information about the Kimball star schema implementation in the Dashboard Analytics system.
 
-![Kimball Star Model](assets/kimball_star_model.png)
+![Kimball Star Model](./assets/kimball_star_model.png)
 
 ## Architecture Overview
 
@@ -328,7 +328,7 @@ The system implements SCD Type 2 for critical dimensions that change over time:
 
 ---
 
-A dimensional model, as implemented in this project, is specifically designed to make marketing analytics and business reporting more effective and accessible. By separating data into fact tables (which store measurable business events, such as impressions, clicks, and conversions) and dimension tables (which describe the context of those events, such as time, site, creative, device, and campaign), the model allows users to analyze performance from multiple perspectives.
+A dimensional model. By separating data into fact tables (which store measurable business events, such as impressions, clicks, and conversions) and dimension tables (which describe the context of those events, such as time, site, creative, device, and campaign), the model allows users to analyze performance from multiple perspectives.
 
 This structure enables:
 
@@ -338,5 +338,4 @@ This structure enables:
 - **Data Consistency**: Centralized dimension tables ensure that all reports and dashboards use consistent definitions for business entities, reducing confusion and errors.
 - **Integration with BI Tools**: The model is structured to work seamlessly with business intelligence platforms such as Power BI, enabling users to create interactive dashboards, drill down into details, and visualize trends without complex data preparation.
 
-In summary, the dimensional model provides a foundation that supports both routine business reporting and deeper analytical exploration, helping organizations understand marketing performance, identify opportunities, and make data-driven decisions.
 

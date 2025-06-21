@@ -1,19 +1,29 @@
-# Copia el contenido de 02_validate_data.py aquí, sin cambios en el código. 
-
 import pandas as pd
-from utils import *
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.utils import *
 
 logger = setup_logging()
+
+def get_project_root():
+    """Get the project root directory"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
 
 def validate_staging_data():
     """Valida integridad de datos staging"""
     logger.info("Iniciando validación de datos...")
     
+    project_root = get_project_root()
     validation_results = []
     
     # Cargar datos
-    rfi_df = pd.read_csv('../02_staging/rfi_staging.csv')
-    ga_df = pd.read_csv('../02_staging/ga_staging.csv')
+    rfi_file = os.path.join(project_root, 'data', 'processed', 'staging', 'rfi_staging.csv')
+    ga_file = os.path.join(project_root, 'data', 'processed', 'staging', 'ga_staging.csv')
+    
+    rfi_df = pd.read_csv(rfi_file)
+    ga_df = pd.read_csv(ga_file)
     
     # Validación 1: Verificar nulos críticos
     logger.info("Validando campos nulos...")
@@ -32,15 +42,15 @@ def validate_staging_data():
     
     # RFI
     if (rfi_df['impressions'] < 0).any():
-        validation_results.append("⚠️ ADVERTENCIA: Impresiones negativas en RFI")
+        validation_results.append("ADVERTENCIA: Impresiones negativas en RFI")
     if (rfi_df['clicks'] > rfi_df['impressions']).any():
-        validation_results.append("⚠️ ADVERTENCIA: Clicks > Impressions en RFI")
+        validation_results.append("ADVERTENCIA: Clicks > Impressions en RFI")
     
     # GA
     if (ga_df['sessions'] < 0).any():
-        validation_results.append("⚠️ ADVERTENCIA: Sesiones negativas en GA")
+        validation_results.append("ADVERTENCIA: Sesiones negativas en GA")
     if (ga_df['bounce_rate'] > 1).any() or (ga_df['bounce_rate'] < 0).any():
-        validation_results.append("⚠️ ADVERTENCIA: Bounce rate fuera de rango [0,1]")
+        validation_results.append("ADVERTENCIA: Bounce rate fuera de rango [0,1]")
     
     # Validación 3: Consistencia de fechas
     logger.info("Validando consistencia de fechas...")
@@ -82,11 +92,16 @@ def validate_staging_data():
     validation_results.append(f"AdContent únicos (GA): {len(ga_adcontents)}")
     validation_results.append(f"Posibles matches encontrados: {len(matches)}")
     
+    # Crear directorio de outputs si no existe
+    outputs_dir = os.path.join(project_root, 'data', 'outputs')
+    os.makedirs(outputs_dir, exist_ok=True)
+    
     # Guardar reporte
-    with open('../02_staging/validation_report.txt', 'w', encoding='utf-8') as f:
+    report_file = os.path.join(outputs_dir, 'validation_report.txt')
+    with open(report_file, 'w', encoding='utf-8') as f:
         f.write('\n'.join(validation_results))
     
-    logger.info("Validación completada. Ver reporte en ../02_staging/validation_report.txt")
+    logger.info(f"Validación completada. Ver reporte en {report_file}")
     
     return True
 

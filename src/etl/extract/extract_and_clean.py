@@ -1,18 +1,27 @@
-# Copia el contenido de 01_extract_and_clean.py aquí, sin cambios en el código. 
-
 import pandas as pd
 import numpy as np
-from utils import *
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.utils import *
 import openpyxl  # Importar la librería para lectura de bajo nivel
 
 logger = setup_logging()
+
+def get_project_root():
+    """Get the project root directory"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
 
 def extract_rfi_data():
     """Extrae y limpia datos RFI"""
     logger.info("Extrayendo datos RFI...")
     
+    project_root = get_project_root()
+    
     # Leer CSV con separador punto y coma
-    df = pd.read_csv('../01_raw_data/rfi_raw/RFI.csv', sep=';')
+    rfi_file = os.path.join(project_root, 'data', 'raw', 'rfi', 'RFI.csv')
+    df = pd.read_csv(rfi_file, sep=';')
     
     # Renombrar columnas para normalizar
     column_mapping = {
@@ -62,8 +71,13 @@ def extract_rfi_data():
     # Filtrar filas con valores válidos
     df_final = df_final[(df_final['impressions'] > 0) | (df_final['clicks'] > 0)]
     
+    # Crear directorio de staging si no existe
+    staging_dir = os.path.join(project_root, 'data', 'processed', 'staging')
+    os.makedirs(staging_dir, exist_ok=True)
+    
     # Guardar staging
-    save_csv(df_final, '../02_staging/rfi_staging.csv')
+    staging_file = os.path.join(staging_dir, 'rfi_staging.csv')
+    save_csv(df_final, staging_file)
     logger.info(f"RFI staging creado: {len(df_final)} filas")
     
     return df_final
@@ -71,10 +85,13 @@ def extract_rfi_data():
 def extract_ga_data():
     """Extrae y limpia datos GA"""
     logger.info("==================== INICIANDO EXTRACCIÓN GA (CSV) ====================")
-    logger.info("Intentando leer archivo: ../01_raw_data/ga_raw/Raw GA Data.csv")
+    
+    project_root = get_project_root()
+    ga_file = os.path.join(project_root, 'data', 'raw', 'google_analytics', 'Raw GA Data.csv')
+    logger.info(f"Intentando leer archivo: {ga_file}")
     
     # Leer CSV (no Excel)
-    df = pd.read_csv('../01_raw_data/ga_raw/Raw GA Data.csv', sep=';')
+    df = pd.read_csv(ga_file, sep=';')
     logger.info(f"Archivo CSV leído exitosamente: {df.shape}")
     logger.info(f"Dimensiones del DataFrame: {df.shape}")
     logger.info(f"Columnas encontradas: {list(df.columns)}")
@@ -171,9 +188,14 @@ def extract_ga_data():
     
     logger.info(f"Primeras 3 filas procesadas:\n{df_final.head(3)}")
     
+    # Crear directorio de staging si no existe
+    staging_dir = os.path.join(project_root, 'data', 'processed', 'staging')
+    os.makedirs(staging_dir, exist_ok=True)
+    
     # Guardar staging
-    save_csv(df_final, '../02_staging/ga_staging.csv')
-    logger.info(f"Guardado: ../02_staging/ga_staging.csv ({len(df_final)} filas)")
+    staging_file = os.path.join(staging_dir, 'ga_staging.csv')
+    save_csv(df_final, staging_file)
+    logger.info(f"Guardado: {staging_file} ({len(df_final)} filas)")
     logger.info(f"GA staging creado: {len(df_final)} filas")
     logger.info("==================== FINALIZANDO EXTRACCIÓN GA ====================")
     

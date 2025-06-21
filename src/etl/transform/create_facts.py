@@ -1,18 +1,37 @@
 import pandas as pd
-from utils import *
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.utils import *
 
 logger = setup_logging()
+
+def get_project_root():
+    """Get the project root directory"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
 
 def create_fact_ad_performance():
     """Crea tabla de hechos de rendimiento de anuncios"""
     logger.info("Creando fact_ad_performance...")
-    rfi_df = pd.read_csv('../02_staging/rfi_staging.csv')
-    dim_date = pd.read_csv('../03_dimensional_model/dimensions/dim_date.csv')
-    dim_campaign = pd.read_csv('../03_dimensional_model/dimensions/dim_campaign.csv')
-    dim_site = pd.read_csv('../03_dimensional_model/dimensions/dim_site.csv')
-    dim_creative = pd.read_csv('../03_dimensional_model/dimensions/dim_creative.csv')
-    dim_placement = pd.read_csv('../03_dimensional_model/dimensions/dim_placement.csv')
-    dim_size = pd.read_csv('../03_dimensional_model/dimensions/dim_creative_size.csv')
+    project_root = get_project_root()
+    
+    rfi_file = os.path.join(project_root, 'data', 'processed', 'staging', 'rfi_staging.csv')
+    date_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_date.csv')
+    campaign_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_campaign.csv')
+    site_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_site.csv')
+    creative_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_creative.csv')
+    placement_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_placement.csv')
+    size_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_creative_size.csv')
+    
+    rfi_df = pd.read_csv(rfi_file)
+    dim_date = pd.read_csv(date_file)
+    dim_campaign = pd.read_csv(campaign_file)
+    dim_site = pd.read_csv(site_file)
+    dim_creative = pd.read_csv(creative_file)
+    dim_placement = pd.read_csv(placement_file)
+    dim_size = pd.read_csv(size_file)
+    
     fact = rfi_df.copy()
     fact = fact.merge(dim_date[['date', 'date_key']], on='date', how='left')
     fact = fact.merge(dim_campaign[['campaign_name', 'campaign_key']], 
@@ -30,19 +49,33 @@ def create_fact_ad_performance():
     numeric_cols = ['impressions', 'clicks']
     for col in numeric_cols:
         fact_final[col] = pd.to_numeric(fact_final[col], errors='coerce').fillna(0)
-    save_csv(fact_final, '../03_dimensional_model/facts/fact_ad_performance.csv')
+    
+    facts_dir = os.path.join(project_root, 'data', 'dimensional', 'facts')
+    os.makedirs(facts_dir, exist_ok=True)
+    
+    save_csv(fact_final, os.path.join(facts_dir, 'fact_ad_performance.csv'))
     logger.info(f"fact_ad_performance creada: {len(fact_final)} filas")
     return fact_final
 
 def create_fact_web_analytics():
     """Crea tabla de hechos de analítica web"""
     logger.info("Creando fact_web_analytics...")
-    ga_df = pd.read_csv('../02_staging/ga_staging.csv')
-    dim_date = pd.read_csv('../03_dimensional_model/dimensions/dim_date.csv')
-    dim_campaign = pd.read_csv('../03_dimensional_model/dimensions/dim_campaign.csv')
-    dim_source = pd.read_csv('../03_dimensional_model/dimensions/dim_source.csv')
-    dim_device = pd.read_csv('../03_dimensional_model/dimensions/dim_device.csv')
-    dim_ad_content = pd.read_csv('../03_dimensional_model/dimensions/dim_ad_content.csv')
+    project_root = get_project_root()
+    
+    ga_file = os.path.join(project_root, 'data', 'processed', 'staging', 'ga_staging.csv')
+    date_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_date.csv')
+    campaign_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_campaign.csv')
+    source_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_source.csv')
+    device_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_device.csv')
+    ad_content_file = os.path.join(project_root, 'data', 'dimensional', 'dimensions', 'dim_ad_content.csv')
+    
+    ga_df = pd.read_csv(ga_file)
+    dim_date = pd.read_csv(date_file)
+    dim_campaign = pd.read_csv(campaign_file)
+    dim_source = pd.read_csv(source_file)
+    dim_device = pd.read_csv(device_file)
+    dim_ad_content = pd.read_csv(ad_content_file)
+    
     fact = ga_df.copy()
     fact = fact.merge(dim_date[['date', 'date_key']], on='date', how='left')
     fact = fact.merge(dim_campaign[['campaign_name', 'campaign_key']], 
@@ -60,7 +93,11 @@ def create_fact_web_analytics():
                     'avg_session_duration_sec', 'bounce_rate']
     for col in numeric_cols:
         fact_final[col] = pd.to_numeric(fact_final[col], errors='coerce').fillna(0)
-    save_csv(fact_final, '../03_dimensional_model/facts/fact_web_analytics.csv')
+    
+    facts_dir = os.path.join(project_root, 'data', 'dimensional', 'facts')
+    os.makedirs(facts_dir, exist_ok=True)
+    
+    save_csv(fact_final, os.path.join(facts_dir, 'fact_web_analytics.csv'))
     logger.info(f"fact_web_analytics creada: {len(fact_final)} filas")
     return fact_final
 
