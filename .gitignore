@@ -45,16 +45,12 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific - Generated files that should not be in Git
-data/processed/
-data/dimensional/
+data/processed/staging/
 data/outputs/
 logs/
 
 # Keep the directory structure but ignore contents
 !data/processed/.gitkeep
-!data/dimensional/dimensions/.gitkeep
-!data/dimensional/facts/.gitkeep
-!data/dimensional/bridge/.gitkeep
 !data/outputs/.gitkeep
 !logs/.gitkeep
 
@@ -77,6 +73,9 @@ logs/
 # Keep documentation files
 !docs/*.csv
 !docs/*.md
+
+# Keep dimensional model files
+!data/dimensional/**/*.csv
 
 # Power BI temporary files
 *.pbix.tmp
